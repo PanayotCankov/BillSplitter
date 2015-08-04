@@ -12,7 +12,14 @@
 			<TabViewItem id="SearchNearby" title="Join" iconSource="res://ic_party">
 				<TabViewItem.view>
 					<GridLayout rows="*, auto">
-						<Button row="1" text="search" margin="40" />
+						<ListView id="nearbyPartiesList">
+							<ListView.itemTemplate>
+								<GridLayout>
+									<Label text="{{ name }}" />
+								</GridLayout>
+							</ListView.itemTemplate>
+						</ListView>
+						<Button row="1" text="search" margin="40" tap="searchNearbyParties" />
 					</GridLayout>
 				</TabViewItem.view>
 			</TabViewItem>
