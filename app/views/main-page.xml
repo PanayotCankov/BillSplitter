@@ -1,5 +1,9 @@
 <Page xmlns="http://www.nativescript.org/tns.xsd" xmlns:drawer="nativescript-telerik-ui/sidedrawer" loaded="pageLoaded">
   <Page.actionBar>
-    <ActionBar title="Bill Splitter" />
+    <ActionBar title="Bill Splitter">
+     <ActionBar.actionItems>
+        <ActionItem icon="res://ic_add" tap="addImageButtonTap" ios.position="right" android.position="actionBar" />
+      </ActionBar.actionItems>
+    </ActionBar>
   </Page.actionBar>
 </Page>
