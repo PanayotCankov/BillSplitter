@@ -3,12 +3,12 @@
 		<TabView.items>
 			<TabViewItem id="NewBill" title="Bill" iconSource="res://ic_add">
 				<TabViewItem.view>
-					<GridLayout rows="*, 200, auto">
+					<GridLayout rows="*, 50, auto">
 						<Image id="billImageView" horizontalAlignment="left" verticalAlignemnt="top" stretch="none" />
 						<AbsoluteLayout id="image-container">
 							<GridLayout id="selection" horizontalAlignment="left" verticalAlignemnt="top" style.borderColor="gray" />
 						</AbsoluteLayout>
-						<Image  row="1" id="cropped-image" stretch="none" horizontalAlignment="center" verticalAlignemnt="center" />
+						<Image  row="1" id="cropped-image" stretch="aspectFit" horizontalAlignment="center" verticalAlignemnt="center" />
 						<Button row="2" text="scan" margin="40" tap="addImageButtonTap" />
 					</GridLayout>
 				</TabViewItem.view>
