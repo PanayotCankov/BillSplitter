@@ -1,0 +1,8 @@
+{
+  "nativescript": {
+    "id": "org.nativescript.billsplitter",
+    "tns-android": {
+      "version": "1.2.0"
+    }
+  }
+}

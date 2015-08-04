@@ -1,0 +1,5 @@
+<Page xmlns="http://www.nativescript.org/tns.xsd" xmlns:drawer="nativescript-telerik-ui/sidedrawer" loaded="pageLoaded">
+  <Page.actionBar>
+    <ActionBar title="Bill Splitter" />
+  </Page.actionBar>
+</Page>

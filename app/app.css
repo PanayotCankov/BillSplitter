@@ -1,0 +1,44 @@
+﻿.title {
+    font-size: 24;
+    margin: 10;
+}
+
+.info {
+    font-size: 16;
+    margin: 10;
+    background-color: white;
+}
+
+.example-image-big {
+    width: 100;
+    height: 100;
+    margin: 10;
+}
+
+.example-image-small {
+    horizontal-align: left;
+    width: 50;
+    height: 50;
+    margin: 10;
+}
+
+.example-title {
+    margin-left: 10;
+}
+
+.drawerContent {
+    background-color: white;
+    vertical-align: top;
+}
+
+.drawerItem {
+    margin: 10;
+}
+
+.selected-example {
+    background-color: lightgray;
+}
+
+.unselected-example {
+    background-color: white;
+}
