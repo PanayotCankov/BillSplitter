@@ -6,4 +6,5 @@
       </ActionBar.actionItems>
     </ActionBar>
   </Page.actionBar>
+  <Image id="billImageView" />
 </Page>
