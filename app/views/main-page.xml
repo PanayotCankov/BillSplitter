@@ -1,10 +1,21 @@
 <Page xmlns="http://www.nativescript.org/tns.xsd" xmlns:drawer="nativescript-telerik-ui/sidedrawer" loaded="pageLoaded">
-  <Page.actionBar>
-    <ActionBar title="Bill Splitter">
-     <ActionBar.actionItems>
-        <ActionItem icon="res://ic_add" tap="addImageButtonTap" ios.position="right" android.position="actionBar" />
-      </ActionBar.actionItems>
-    </ActionBar>
-  </Page.actionBar>
-  <Image id="billImageView" />
+	<TabView>
+		<TabView.items>
+			<TabViewItem id="NewBill" title="Bill" iconSource="res://ic_add">
+				<TabViewItem.view>
+					<GridLayout rows="*, auto">
+						<Image id="billImageView" />
+						<Button row="1" text="scan" margin="40" tap="addImageButtonTap" />
+					</GridLayout>
+				</TabViewItem.view>
+			</TabViewItem>
+			<TabViewItem id="SearchNearby" title="Join" iconSource="res://ic_party">
+				<TabViewItem.view>
+					<GridLayout rows="*, auto">
+						<Button row="1" text="search" margin="40" />
+					</GridLayout>
+				</TabViewItem.view>
+			</TabViewItem>
+		</TabView.items>
+	</TabView>
 </Page>
