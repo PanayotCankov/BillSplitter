@@ -3,9 +3,13 @@
 		<TabView.items>
 			<TabViewItem id="NewBill" title="Bill" iconSource="res://ic_add">
 				<TabViewItem.view>
-					<GridLayout rows="*, auto">
-						<Image id="billImageView" />
-						<Button row="1" text="scan" margin="40" tap="addImageButtonTap" />
+					<GridLayout rows="*, 200, auto">
+						<Image id="billImageView" horizontalAlignment="left" verticalAlignemnt="top" stretch="none" />
+						<AbsoluteLayout id="image-container">
+							<GridLayout id="selection" horizontalAlignment="left" verticalAlignemnt="top" style.borderColor="gray" />
+						</AbsoluteLayout>
+						<Image  row="1" id="cropped-image" stretch="none" horizontalAlignment="center" verticalAlignemnt="center" />
+						<Button row="2" text="scan" margin="40" tap="addImageButtonTap" />
 					</GridLayout>
 				</TabViewItem.view>
 			</TabViewItem>
