@@ -5,6 +5,7 @@ Repository used for the NativeScript demo app
 ```
 npm platform add ios
 npm platform add android
+tns library add ios app/lib/TesseractOCR.framework
 ```
 
 # To compile the TypeScript
