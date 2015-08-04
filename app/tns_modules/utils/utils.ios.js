@@ -22,6 +22,7 @@ var ios;
     var collections;
     (function (collections) {
         function jsArrayToNSArray(str) {
+            /*
             var arr = new NSMutableArray();
             if ("undefined" !== typeof str) {
                 for (var element in str) {
@@ -29,6 +30,8 @@ var ios;
                 }
             }
             return arr;
+            */
+            return str;
         }
         collections.jsArrayToNSArray = jsArrayToNSArray;
         function nsArrayToJSArray(a) {
