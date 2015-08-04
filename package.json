@@ -1,8 +1,14 @@
 {
-  "nativescript": {
-    "id": "org.nativescript.billsplitter",
-    "tns-android": {
-      "version": "1.2.0"
-    }
-  }
+	"nativescript": {
+		"id": "org.nativescript.billsplitter",
+		"tns-android": {
+			"version": "1.2.0"
+		},
+		"tns-ios": {
+			"version": "1.2.0"
+		}
+	},
+	"devDependencies": {
+		"typescript": "^1.5.3"
+	}
 }
