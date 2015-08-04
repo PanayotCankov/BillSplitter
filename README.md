@@ -8,6 +8,8 @@ npm platform add android
 tns library add ios app/lib/TesseractOCR.framework
 ```
 
+Tesseract requires language data files in order to initialize the engine. To setup Tesseract import your tessdata folder (located under ``` app/lib/testdata ``` ) into the root of your project AS A REFERENCED FOLDER.
+
 # To compile the TypeScript
 To run TSC, first `npm install` then:
 ```
