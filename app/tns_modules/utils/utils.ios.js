@@ -22,13 +22,13 @@ var ios;
     var collections;
     (function (collections) {
         function jsArrayToNSArray(str) {
-            var arr = new NSMutableArray();
-            if ("undefined" !== typeof str) {
-                for (var element in str) {
-                    arr.addObject(str[element]);
-                }
-            }
-            return arr;
+            // var arr = new NSMutableArray();
+            // if ("undefined" !== typeof str) {
+            //     for (var element in str) {
+            //         arr.addObject(str[element]);
+            //     }
+            // }
+            return str;
         }
         collections.jsArrayToNSArray = jsArrayToNSArray;
         function nsArrayToJSArray(a) {
