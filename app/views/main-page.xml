@@ -32,7 +32,6 @@
 			<GridLayout id="selection" horizontalAlignment="left" verticalAlignment="top" style.borderColor="gray" />
 		</AbsoluteLayout>
 		
-		<!-- <Image id="cropped-image" row="1" margin="5" stretch="aspectFit" horizontalAlignment="left" verticalAlignment="top" />-->
 		<Border row="4" height="1" verticalAlignment="top" backgroundColor="#AAA" />
 		<Button text="scan" row="4" horizontalAlignment="center" verticalAlignment="bottom" tap="addImageButtonTap" />
 	</GridLayout>

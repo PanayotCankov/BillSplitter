@@ -31,6 +31,16 @@ exports.pageLoaded = pageLoaded;
 function addImageButtonTap() {
     cameraModule.takePicture().then(function (picture) {
         console.log("Result is an image source instance");
+        if (picture.ios) {
+            var image = picture.ios;
+            if (image.imageOrientation != UIImageOrientation.UIImageOrientationUp) {
+                UIGraphicsBeginImageContextWithOptions(image.size, false, image.scale);
+                image.drawInRect(CGRectMake(0, 0, image.size.width, image.size.height));
+                var normalizedImage = UIGraphicsGetImageFromCurrentImageContext();
+                UIGraphicsEndImageContext();
+                picture = imageSource.fromNativeSource(normalizedImage);
+            }
+        }
         billImageView.imageSource = picture;
         computeScale();
     });
