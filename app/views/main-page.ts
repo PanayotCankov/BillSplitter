@@ -9,30 +9,18 @@ import listView = require("ui/list-view");
 
 import utils = require("utils/utils");
 
+import billvm = require("./bill-view-model");
+
 import observable = require("data/observable");
 import observableArray = require("data/observable-array");
+
 var page;
 var billImageView: image.Image;
 var container: absolute.AbsoluteLayout;
 var selection: grid.GridLayout;
-var croppedImage: image.Image;
 var density: number;
 
-var productsListView: listView.ListView;
-
-class Product extends observable.Observable {
-    image: any;
-    price: number;
-}
-
-var productsList = new observableArray.ObservableArray<Product>();
-
-function addProduct(image: any, price: number) {
-    var product = new Product();
-    product.image = image;
-    product.price = 2.99;
-    productsList.push(product);
-}
+var bill = new billvm.Bill();
 
 // Event handler for Page "loaded" event attached in main-page.xml
 export function pageLoaded(args: observable.EventData) {
@@ -43,7 +31,6 @@ export function pageLoaded(args: observable.EventData) {
     billImageView = <image.Image>page.getViewById("billImageView");
     container = <absolute.AbsoluteLayout>page.getViewById("image-container");
     selection = <grid.GridLayout> page.getViewById("selection");
-    croppedImage = <image.Image> page.getViewById("cropped-image");
 
     if (container.android) {
         container.android.setOnTouchListener(new android.view.View.OnTouchListener({
@@ -54,8 +41,7 @@ export function pageLoaded(args: observable.EventData) {
         container.observe(gestures.GestureTypes.pan, containerPan);
     }
 
-    productsListView = <listView.ListView> page.getViewById("products-list");
-    productsListView.items = productsList;
+    page.bindingContext = bill;
 }
 
 
@@ -64,6 +50,10 @@ export function addImageButtonTap() {
         console.log("Result is an image source instance");
         billImageView.imageSource = picture;
     });
+}
+
+export function remove(e) {
+    bill.removeProduct(e.object.bindingContext);
 }
 
 // Selection
@@ -167,5 +157,5 @@ function cropImage() {
         croppedImageSource = imageSource.fromNativeSource(croppedBitmap);
     }
 
-    addProduct(croppedImageSource, 2.99);
+    bill.addFromImage(croppedImageSource);
 }

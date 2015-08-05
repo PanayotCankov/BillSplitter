@@ -1,44 +1,21 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
 var gestures = require("ui/gestures");
 var cameraModule = require("camera");
 var absolute = require("ui/layouts/absolute-layout");
 var imageSource = require("image-source");
 var utils = require("utils/utils");
-var observable = require("data/observable");
-var observableArray = require("data/observable-array");
+var billvm = require("./bill-view-model");
 var page;
 var billImageView;
 var container;
 var selection;
-var croppedImage;
 var density;
-var productsListView;
-var Product = (function (_super) {
-    __extends(Product, _super);
-    function Product() {
-        _super.apply(this, arguments);
-    }
-    return Product;
-})(observable.Observable);
-var productsList = new observableArray.ObservableArray();
-function addProduct(image, price) {
-    var product = new Product();
-    product.image = image;
-    product.price = 2.99;
-    productsList.push(product);
-}
+var bill = new billvm.Bill();
 function pageLoaded(args) {
     page = args.object;
     density = utils.layout.getDisplayDensity();
     billImageView = page.getViewById("billImageView");
     container = page.getViewById("image-container");
     selection = page.getViewById("selection");
-    croppedImage = page.getViewById("cropped-image");
     if (container.android) {
         container.android.setOnTouchListener(new android.view.View.OnTouchListener({
             onTouch: containerTouch
@@ -47,8 +24,7 @@ function pageLoaded(args) {
     else if (container.ios) {
         container.observe(gestures.GestureTypes.pan, containerPan);
     }
-    productsListView = page.getViewById("products-list");
-    productsListView.items = productsList;
+    page.bindingContext = bill;
 }
 exports.pageLoaded = pageLoaded;
 function addImageButtonTap() {
@@ -58,6 +34,10 @@ function addImageButtonTap() {
     });
 }
 exports.addImageButtonTap = addImageButtonTap;
+function remove(e) {
+    bill.removeProduct(e.object.bindingContext);
+}
+exports.remove = remove;
 function containerTouch(view, motionEvent) {
     var x = motionEvent.getX() / density;
     var y = motionEvent.getY() / density;
@@ -140,5 +120,5 @@ function cropImage() {
         var croppedBitmap = android.graphics.Bitmap.createBitmap(imgSrc.android, left, top, width, height);
         croppedImageSource = imageSource.fromNativeSource(croppedBitmap);
     }
-    addProduct(croppedImageSource, 2.99);
+    bill.addFromImage(croppedImageSource);
 }
