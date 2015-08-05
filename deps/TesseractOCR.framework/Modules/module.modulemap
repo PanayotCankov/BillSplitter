@@ -1,5 +1,5 @@
 framework module TesseractOCR {
-  umbrella header "Pods-BillSplitter-TesseractOCRiOS-umbrella.h"
+  umbrella header "Pods-TesseractOCRiOS-umbrella.h"
 
   export *
   module * { export * }
