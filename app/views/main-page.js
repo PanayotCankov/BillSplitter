@@ -27,6 +27,10 @@ function pageLoaded(args) {
     else if (selectionContainer.ios) {
         selectionContainer.observe(gestures.GestureTypes.pan, containerPan);
     }
+    if (page.android) {
+        var list = page.getViewById("products-list");
+        list.android.setDescendantFocusability(android.view.ViewGroup.FOCUS_AFTER_DESCENDANTS);
+    }
     page.bindingContext = bill;
 }
 exports.pageLoaded = pageLoaded;
@@ -93,7 +97,7 @@ function containerPan(args) {
         }
     }
 }
-var topOffset = 40;
+var topOffset = 30;
 var selX;
 var selY;
 var selW;

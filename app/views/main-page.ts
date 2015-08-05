@@ -47,6 +47,11 @@ export function pageLoaded(args: observable.EventData) {
         selectionContainer.observe(gestures.GestureTypes.pan, containerPan);
     }
 
+    if (page.android) {
+        var list = <listView.ListView>page.getViewById("products-list");
+        list.android.setDescendantFocusability(android.view.ViewGroup.FOCUS_AFTER_DESCENDANTS);
+    }
+
     page.bindingContext = bill;
 }
 
@@ -130,7 +135,7 @@ function containerPan(args: gestures.PanGestureEventData) {
     }
 }
 
-var topOffset = 40;
+var topOffset = 30;
 var selX: number;
 var selY: number;
 var selW: number;
@@ -140,11 +145,11 @@ function panStarted(x: number, y: number) {
     selY = y;
     selW = 0;
     selH = 0;
-    
+
     selectionStart.visibility = "visible";
     absolute.AbsoluteLayout.setLeft(selectionStart, selX - 1);
     absolute.AbsoluteLayout.setTop(selectionStart, selY - topOffset - 1);
-    
+
     selection.borderWidth = 1;
     updateSelection();
 }
