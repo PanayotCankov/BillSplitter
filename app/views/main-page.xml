@@ -1,5 +1,5 @@
 <Page xmlns="http://www.nativescript.org/tns.xsd" xmlns:drawer="nativescript-telerik-ui/sidedrawer" loaded="pageLoaded">
-	<GridLayout rows="1*, auto, 2*, auto">		
+	<GridLayout rows="1*, auto, 2*, auto" columns="*">
 		<Border height="1" verticalAlignment="top" backgroundColor="gray" />
 		<ListView id="products-list" items="{{ products }}" row="0">
 			<ListView.itemTemplate>
@@ -10,19 +10,20 @@
 				</GridLayout>
 			</ListView.itemTemplate>
 		</ListView>
-
+		
 		<GridLayout row="1" columns="1*, 2*, 50">
 			<Border colSpan="3" height="1" verticalAlignment="top" backgroundColor="gray" />
 			<Label col="0" horizontalAlignment="right" text="Total:" margin="5 0" />
 			<Label col="1" horizontalAlignment="right" text="{{ total }}" margin="5 0" />
 			<Border colSpan="3" height="1" verticalAlignment="bottom" backgroundColor="gray" />
 		</GridLayout>
-
-		<Image id="billImageView" row="2" horizontalAlignment="center" verticalAlignment="center" />
-		<AbsoluteLayout id="image-container" row="2">
+		
+		<Image id="billImageView" row="2" stretch="aspectFit" horizontalAlignment="left" verticalAlignment="top" />
+		<AbsoluteLayout id="selection-container" row="2" horizontalAlignment="stretch" verticalAlignment="stretch">
 			<GridLayout id="selection" horizontalAlignment="left" verticalAlignment="top" style.borderColor="gray" />
 		</AbsoluteLayout>
-
+		
+		<!-- <Image id="cropped-image" row="1" margin="5" stretch="aspectFit" horizontalAlignment="left" verticalAlignment="top" />-->
 		<Border row="3" height="1" verticalAlignment="top" backgroundColor="gray" />
 		<Button text="scan" row="3" horizontalAlignment="center" verticalAlignment="bottom" tap="addImageButtonTap" />
 	</GridLayout>

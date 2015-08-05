@@ -16,9 +16,10 @@ import observableArray = require("data/observable-array");
 
 var page;
 var billImageView: image.Image;
-var container: absolute.AbsoluteLayout;
+var selectionContainer: absolute.AbsoluteLayout;
 var selection: grid.GridLayout;
 var density: number;
+var imageScale: number = 1;
 
 var bill = new billvm.Bill();
 
@@ -29,16 +30,16 @@ export function pageLoaded(args: observable.EventData) {
     // page.bindingContext = null;
     density = utils.layout.getDisplayDensity();
     billImageView = <image.Image>page.getViewById("billImageView");
-    container = <absolute.AbsoluteLayout>page.getViewById("image-container");
+    selectionContainer = <absolute.AbsoluteLayout>page.getViewById("selection-container");
     selection = <grid.GridLayout> page.getViewById("selection");
 
-    if (container.android) {
-        container.android.setOnTouchListener(new android.view.View.OnTouchListener({
+    if (selectionContainer.android) {
+        selectionContainer.android.setOnTouchListener(new android.view.View.OnTouchListener({
             onTouch: containerTouch
         }));
     }
-    else if (container.ios) {
-        container.observe(gestures.GestureTypes.pan, containerPan);
+    else if (selectionContainer.ios) {
+        selectionContainer.observe(gestures.GestureTypes.pan, containerPan);
     }
 
     page.bindingContext = bill;
@@ -49,11 +50,26 @@ export function addImageButtonTap() {
     cameraModule.takePicture().then(picture => {
         console.log("Result is an image source instance");
         billImageView.imageSource = picture;
+        computeScale();
     });
 }
 
 export function remove(e) {
     bill.removeProduct(e.object.bindingContext);
+}
+
+function computeScale() {
+    // var imageBounds = (<any>billImageView)._getCurrentLayoutBounds();
+    // var actualWidth = imageBounds.right - imageBounds.left;
+    // var actualHeight = imageBounds.bottom - imageBounds.top;
+    // console.log("imageBounds: " + JSON.stringify(imageBounds));
+    var actualWidth = selectionContainer.getMeasuredWidth();
+    var actualHeight = selectionContainer.getMeasuredHeight();
+    var imageWidth = billImageView.imageSource.width;
+    var imageheight = billImageView.imageSource.height;
+    console.log("actual " + actualWidth + ", " + actualHeight + " image " + imageWidth + ", " + imageheight);
+    imageScale = Math.min(actualWidth / imageWidth, actualHeight / imageheight);
+    console.log("imageScale " + imageScale);
 }
 
 // Selection
@@ -138,13 +154,18 @@ function cropImage() {
         return;
     }
 
-    var left = (selX - (selW > 0 ? 0 : -selW)) * density;
-    var top = (selY - (selH > 0 ? 0 : -selH)) * density;
-    var width = (Math.abs(selW)) * density;
-    var height = (Math.abs(selH)) * density;
+    var left = (selX - (selW > 0 ? 0 : -selW)) * density / imageScale;
+    var top = (selY - (selH > 0 ? 0 : -selH)) * density / imageScale;
+    var width = (Math.abs(selW)) * density / imageScale;
+    var height = (Math.abs(selH)) * density / imageScale;
+
+    // validate
+    left = Math.max(0, left);
+    top = Math.max(0, top);
+    width = Math.min(imgSrc.width - left, width);
+    height = Math.min(imgSrc.height - top, height);
 
     var croppedImageSource;
-
     if (billImageView.ios) {
         var rect = CGRectMake(left, top, width, height);
         var imageRef = CGImageCreateWithImageInRect(billImageView.ios.image.CGImage, rect);
