@@ -11,9 +11,9 @@
 		<ListView row="1" id="products-list" items="{{ products }}">
 			<ListView.itemTemplate>
 				<GridLayout height="30" columns="1*, 1*, 1*, 10, 40" horizontalAlignment="stretch">
-					<Image imageSource="{{ image }}" horizontalAlignment="right" />
-					<TextField col="1" text="{{ text }}" style.textAlignment="right" keyboardType="number" />
-					<TextField col="2" text="{{ price }}" style.textAlignment="right" keyboardType="number" />
+					<Image imageSource="{{ image }}" horizontalAlignment="right" height="30" stretch="aspectFit"/>
+					<TextField col="1" text="{{ text }}" style.textAlignment="right" ios:keyboardType="number" />
+					<TextField col="2" text="{{ price }}" style.textAlignment="right" ios:keyboardType="number" />
 					<Label col="3" text="!" color="red" horizontalAlignment="right" visibility="{{ isNaN ? 'visible' : 'collapse' }}" />
 					<Button col="4" text="x" tap="remove" />
 				</GridLayout>

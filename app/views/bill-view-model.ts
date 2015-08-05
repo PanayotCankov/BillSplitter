@@ -1,5 +1,5 @@
 import imageSource = require("image-source");
-
+import fs = require("file-system");
 import observable = require("data/observable");
 import observableArray = require("data/observable-array");
 
@@ -68,27 +68,36 @@ export class Product extends ObservableBase {
         super();
 
         this._image = image;
-
+        var recognized: string = "";
         if (image.android) {
-            // Parse in android
-            this.price = 0;
+            var bitmap = image.android.copy(android.graphics.Bitmap.Config.ARGB_8888, true);
+            var api = new (<any>com).googlecode.tesseract.android.TessBaseAPI();
+            var setRes = api.setVariable("classify_bln_numeric_mode", "1");
+            console.log("setResult: " + setRes);
+            api.init(fs.knownFolders.currentApp().path, "eng");
+            console.log("TessBaseAPI created: " + api);
+
+            api.setImage(bitmap);
+            recognized = api.getUTF8Text();
+            api.end();
         } else if (image.ios) {
             // Parse in iOS
-            var tesseract = G8Tesseract.alloc().initWithLanguageEngineMode("eng+fra+bul", G8OCREngineMode.G8OCREngineModeTesseractOnly);
+            var tesseract = G8Tesseract.alloc().initWithLanguageEngineMode("eng", G8OCREngineMode.G8OCREngineModeTesseractOnly);
             tesseract.pageSegmentationMode = G8PageSegmentationMode.G8PageSegmentationModeAuto;
+            tesseract.setVariableValueForKey("classify_bln_numeric_mode", "1");
             tesseract.maximumRecognitionTime = 60.0;
             tesseract.image = (<any>image).ios.g8_blackAndWhite(); // picture.ios.g8_blackAndWhite();
             tesseract.recognize();
-
             console.log("Recognized: " + tesseract.recognizedText);
 
-            this.text = tesseract.recognizedText.trim();
-
-        } else {
-            this.price = 0;
+            recognized = tesseract.recognizedText;
         }
+        console.log("Recognized: " + recognized);
+        recognized = recognized.trim();
+        recognized = recognized.replace(",", ".");
+        this.text = recognized;
     }
-
+    
     get image() { return this._image; }
 
     get text(): string { return this._text; }

@@ -6,6 +6,7 @@ import absolute = require("ui/layouts/absolute-layout");
 import imageSource = require("image-source");
 import image = require("ui/image");
 import listView = require("ui/list-view");
+import fs = require("file-system");
 
 import utils = require("utils/utils");
 
@@ -25,6 +26,8 @@ var bill = new billvm.Bill();
 
 // Event handler for Page "loaded" event attached in main-page.xml
 export function pageLoaded(args: observable.EventData) {
+        
+    
     // Get the event sender
     page = <pages.Page>args.object;
     // page.bindingContext = null;
@@ -175,8 +178,8 @@ function cropImage() {
     // validate
     left = Math.max(0, left);
     top = Math.max(0, top);
-    width = Math.min(imgSrc.width - left, width);
-    height = Math.min(imgSrc.height - top, height);
+    width =  Math.max(0, Math.min(imgSrc.width - left, width));
+    height =  Math.max(0,Math.min(imgSrc.height - top, height));
 
     var croppedImageSource;
     if (billImageView.ios) {
