@@ -1,25 +1,28 @@
 <Page xmlns="http://www.nativescript.org/tns.xsd" xmlns:drawer="nativescript-telerik-ui/sidedrawer" loaded="pageLoaded">
-	<TabView>
-		<TabView.items>
-			<TabViewItem id="NewBill" title="Bill" iconSource="res://ic_add">
-				<TabViewItem.view>
-					<GridLayout rows="*, 50, auto">
-						<Image id="billImageView" horizontalAlignment="left" verticalAlignemnt="top" stretch="none" />
-						<AbsoluteLayout id="image-container">
-							<GridLayout id="selection" horizontalAlignment="left" verticalAlignemnt="top" style.borderColor="gray" />
-						</AbsoluteLayout>
-						<Image  row="1" id="cropped-image" stretch="aspectFit" horizontalAlignment="center" verticalAlignemnt="center" />
-						<Button row="2" text="scan" margin="40" tap="addImageButtonTap" />
-					</GridLayout>
-				</TabViewItem.view>
-			</TabViewItem>
-			<TabViewItem id="SearchNearby" title="Join" iconSource="res://ic_party">
-				<TabViewItem.view>
-					<GridLayout rows="*, auto">
-						<Button row="1" text="search" margin="40" />
-					</GridLayout>
-				</TabViewItem.view>
-			</TabViewItem>
-		</TabView.items>
-	</TabView>
+
+	<GridLayout rows="1*, auto, 2*, auto">		
+
+		<ListView id="products-list" row="0">
+			<ListView.itemTemplate>
+				<GridLayout height="30" columns="1*, 2*, auto" horizontalAlignment="stretch">
+					<Image imageSource="{{ image }}" />
+					<TextField col="1" text="{{ price }}" margin="0 10" textAlignment="right" />
+					<Button col="2" text="x" margin="0 5 0 20" />
+				</GridLayout>
+			</ListView.itemTemplate>
+		</ListView>
+
+		<GridLayout row="1" columns="auto, *" borderColor="gray">
+			<Label text="Total:" />
+			<Label col="1" horizontalAlignment="right" text="29.99" />
+		</GridLayout>
+
+		<Image id="billImageView" row="2" horizontalAlignment="center" verticalAlignment="center" />
+		<AbsoluteLayout id="image-container" row="2">
+			<GridLayout id="selection" horizontalAlignment="left" verticalAlignment="top" style.borderColor="gray" />
+		</AbsoluteLayout>
+		<!-- <Image id="cropped-image" row="1" margin="5" stretch="aspectFit" horizontalAlignment="left" verticalAlignment="top" /> -->
+
+		<Button text="scan" row="3" margin="5" horizontalAlignment="center" verticalAlignment="bottom" tap="addImageButtonTap" />
+	</GridLayout>
 </Page>

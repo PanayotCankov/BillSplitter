@@ -1,4 +1,3 @@
-import observable = require("data/observable");
 import pages = require("ui/page");
 import gestures = require("ui/gestures");
 import cameraModule = require("camera");
@@ -6,15 +5,34 @@ import grid = require("ui/layouts/grid-layout");
 import absolute = require("ui/layouts/absolute-layout");
 import imageSource = require("image-source");
 import image = require("ui/image");
-import paltform = require("ui/image");
+import listView = require("ui/list-view");
+
 import utils = require("utils/utils");
 
+import observable = require("data/observable");
+import observableArray = require("data/observable-array");
 var page;
 var billImageView: image.Image;
 var container: absolute.AbsoluteLayout;
 var selection: grid.GridLayout;
 var croppedImage: image.Image;
 var density: number;
+
+var productsListView: listView.ListView;
+
+class Product extends observable.Observable {
+    image: any;
+    price: number;
+}
+
+var productsList = new observableArray.ObservableArray<Product>();
+
+function addProduct(image: any, price: number) {
+    var product = new Product();
+    product.image = image;
+    product.price = 2.99;
+    productsList.push(product);
+}
 
 // Event handler for Page "loaded" event attached in main-page.xml
 export function pageLoaded(args: observable.EventData) {
@@ -35,6 +53,9 @@ export function pageLoaded(args: observable.EventData) {
     else if (container.ios) {
         container.observe(gestures.GestureTypes.pan, containerPan);
     }
+
+    productsListView = <listView.ListView> page.getViewById("products-list");
+    productsListView.items = productsList;
 }
 
 
@@ -132,16 +153,19 @@ function cropImage() {
     var width = (Math.abs(selW)) * density;
     var height = (Math.abs(selH)) * density;
 
+    var croppedImageSource;
+
     if (billImageView.ios) {
         var rect = CGRectMake(left, top, width, height);
         var imageRef = CGImageCreateWithImageInRect(billImageView.ios.image.CGImage, rect);
         var uiImage = UIImage.imageWithCGImage(imageRef);
-        croppedImage.imageSource = imageSource.fromNativeSource(uiImage);
+        croppedImageSource = imageSource.fromNativeSource(uiImage);
         CGImageRelease(imageRef);
     }
     else if (imgSrc.android) {
         var croppedBitmap = android.graphics.Bitmap.createBitmap(imgSrc.android, left, top, width, height)
-        var croppedSource = imageSource.fromNativeSource(croppedBitmap);
-        croppedImage.imageSource = croppedSource;
+        croppedImageSource = imageSource.fromNativeSource(croppedBitmap);
     }
+
+    addProduct(croppedImageSource, 2.99);
 }
