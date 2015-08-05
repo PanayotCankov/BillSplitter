@@ -28,10 +28,9 @@ var Bill = (function (_super) {
     Bill.prototype.removeProduct = function (product) {
         var index = this.products.indexOf(product);
         if (index > -1) {
-            console.log("Remove index " + index);
             this.products.splice(index, 1);
+            this.updateTotal();
         }
-        this.updateTotal();
     };
     Bill.prototype.updateTotal = function () {
         var total = 0;
@@ -53,7 +52,21 @@ var Product = (function (_super) {
         _super.call(this);
         this.bill = bill;
         this.image = image;
-        this.price = 2.99;
+        if (image.android) {
+            this.price = 0;
+        }
+        else if (image.ios) {
+            var tesseract = G8Tesseract.alloc().initWithLanguageEngineMode("eng+fra+bul", G8OCREngineMode.G8OCREngineModeTesseractOnly);
+            tesseract.pageSegmentationMode = G8PageSegmentationMode.G8PageSegmentationModeAuto;
+            tesseract.maximumRecognitionTime = 60.0;
+            tesseract.image = image.ios.g8_blackAndWhite();
+            tesseract.recognize();
+            console.log("Recognized: " + tesseract.recognizedText);
+            this.price = parseFloat(tesseract.recognizedText);
+        }
+        else {
+            this.price = 0;
+        }
     }
     Product.prototype.remove = function () {
         this.bill.removeProduct(this);

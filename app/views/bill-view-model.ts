@@ -3,6 +3,10 @@ import imageSource = require("image-source");
 import observable = require("data/observable");
 import observableArray = require("data/observable-array");
 
+declare var G8Tesseract: any;
+declare var G8OCREngineMode: any;
+declare var G8PageSegmentationMode: any;
+
 export class Bill extends observable.Observable {
 
     products: observableArray.ObservableArray<Product>;
@@ -55,8 +59,25 @@ export class Product extends observable.Observable {
         super();
 
         this.image = image;
-        // Apply image parsing...
-        this.price = 2.99;
+
+        if (image.android) {
+            // Parse in android
+            this.price = 0;
+        } else if (image.ios) {
+            // Parse in iOS
+            var tesseract = G8Tesseract.alloc().initWithLanguageEngineMode("eng+fra+bul", G8OCREngineMode.G8OCREngineModeTesseractOnly);
+            tesseract.pageSegmentationMode = G8PageSegmentationMode.G8PageSegmentationModeAuto;
+            tesseract.maximumRecognitionTime = 60.0;
+            tesseract.image = (<any>image).ios.g8_blackAndWhite(); // picture.ios.g8_blackAndWhite();
+            tesseract.recognize();
+
+            console.log("Recognized: " + tesseract.recognizedText);
+
+            // Apply image parsing...
+            this.price = parseFloat(tesseract.recognizedText);
+        } else {
+            this.price = 0;
+        }
     }
 
     remove() {
