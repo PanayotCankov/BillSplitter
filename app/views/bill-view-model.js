@@ -6,6 +6,17 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var observable = require("data/observable");
 var observableArray = require("data/observable-array");
+var ObservableBase = (function (_super) {
+    __extends(ObservableBase, _super);
+    function ObservableBase() {
+        _super.apply(this, arguments);
+    }
+    ObservableBase.prototype.notifyPropertyChanged = function (propertyName, value) {
+        this.notify({ object: this, eventName: observable.Observable.propertyChangeEvent, propertyName: propertyName, value: value });
+    };
+    return ObservableBase;
+})(observable.Observable);
+exports.ObservableBase = ObservableBase;
 var Bill = (function (_super) {
     __extends(Bill, _super);
     function Bill() {
@@ -35,23 +46,23 @@ var Bill = (function (_super) {
     Bill.prototype.updateTotal = function () {
         var total = 0;
         for (var i = 0; i < this.products.length; i++) {
-            total += this.products.getItem(i).price;
+            var product = this.products.getItem(i);
+            if (!product.isNaN) {
+                total += this.products.getItem(i).price;
+            }
         }
-        this._total = Math.ceil(total * 100) / 100;
+        this._total = Math.round(total * 100) / 100;
         this.notifyPropertyChanged("total", this._total);
     };
-    Bill.prototype.notifyPropertyChanged = function (propertyName, value) {
-        this.notify({ object: this, eventName: observable.Observable.propertyChangeEvent, propertyName: propertyName, value: value });
-    };
     return Bill;
-})(observable.Observable);
+})(ObservableBase);
 exports.Bill = Bill;
 var Product = (function (_super) {
     __extends(Product, _super);
     function Product(bill, image) {
         _super.call(this);
         this.bill = bill;
-        this.image = image;
+        this._image = image;
         if (image.android) {
             this.price = 0;
         }
@@ -62,15 +73,49 @@ var Product = (function (_super) {
             tesseract.image = image.ios.g8_blackAndWhite();
             tesseract.recognize();
             console.log("Recognized: " + tesseract.recognizedText);
-            this.price = parseFloat(tesseract.recognizedText);
+            this.text = tesseract.recognizedText.trim();
         }
         else {
             this.price = 0;
         }
     }
+    Object.defineProperty(Product.prototype, "image", {
+        get: function () { return this._image; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Product.prototype, "text", {
+        get: function () { return this._text; },
+        set: function (value) {
+            this._text = value;
+            this.notifyPropertyChanged("text", value);
+            this.price = parseFloat(this._text);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Product.prototype, "price", {
+        get: function () { return this._price; },
+        set: function (value) {
+            if (typeof value === "string") {
+                value = parseFloat(value);
+            }
+            this._price = value;
+            this.notifyPropertyChanged("price", value);
+            this.notifyPropertyChanged("isNaN", isNaN(this.price));
+            this.bill.updateTotal();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Product.prototype, "isNaN", {
+        get: function () { return isNaN(this.price); },
+        enumerable: true,
+        configurable: true
+    });
     Product.prototype.remove = function () {
         this.bill.removeProduct(this);
     };
     return Product;
-})(observable.Observable);
+})(ObservableBase);
 exports.Product = Product;

@@ -1,30 +1,39 @@
 <Page xmlns="http://www.nativescript.org/tns.xsd" xmlns:drawer="nativescript-telerik-ui/sidedrawer" loaded="pageLoaded">
-	<GridLayout rows="1*, auto, 2*, auto" columns="*">
-		<Border height="1" verticalAlignment="top" backgroundColor="gray" />
-		<ListView id="products-list" items="{{ products }}" row="0">
+	<GridLayout rows="auto, 1*, auto, 2.5*, auto" columns="*">
+
+		<GridLayout columns="1*, 1*, 1*, 50">
+			<Label col="0" color="#888" text="image" horizontalAlignment="right" margin="5 0" />
+			<Label col="1" color="#888" text="raw text" horizontalAlignment="right" margin="5 0" />
+			<Label col="2" color="#888" text="price" horizontalAlignment="right" margin="5 0" />
+		</GridLayout>
+		<Border height="1" verticalAlignment="bottom" backgroundColor="#AAA" />
+
+		<ListView row="1" id="products-list" items="{{ products }}">
 			<ListView.itemTemplate>
-				<GridLayout height="30" columns="1*, 2*, 50" horizontalAlignment="stretch">
-					<Image imageSource="{{ image }}" />
-					<Label col="1" text="{{ price }}" horizontalAlignment="right" />
-					<Button col="2" text="x" horizontalAlignment="right" margin="0 0 0 20" tap="remove" />
+				<GridLayout height="30" columns="1*, 1*, 1*, 10, 40" horizontalAlignment="stretch">
+					<Image imageSource="{{ image }}" horizontalAlignment="right" />
+					<TextField col="1" text="{{ text }}" style.textAlignment="right" keyboardType="number" />
+					<TextField col="2" text="{{ price }}" style.textAlignment="right" keyboardType="number" />
+					<Label col="3" text="!" color="red" horizontalAlignment="right" visibility="{{ isNaN ? 'visible' : 'collapse' }}" />
+					<Button col="4" text="x" tap="remove" />
 				</GridLayout>
 			</ListView.itemTemplate>
 		</ListView>
 		
-		<GridLayout row="1" columns="1*, 2*, 50">
-			<Border colSpan="3" height="1" verticalAlignment="top" backgroundColor="gray" />
+		<GridLayout row="2" columns="1*, 2*, 50">
+			<Border colSpan="3" height="1" verticalAlignment="top" backgroundColor="#AAA" />
 			<Label col="0" horizontalAlignment="right" text="Total:" margin="5 0" />
 			<Label col="1" horizontalAlignment="right" text="{{ total }}" margin="5 0" />
-			<Border colSpan="3" height="1" verticalAlignment="bottom" backgroundColor="gray" />
+			<Border colSpan="3" height="1" verticalAlignment="bottom" backgroundColor="#AAA" />
 		</GridLayout>
 		
-		<Image id="billImageView" row="2" stretch="aspectFit" horizontalAlignment="left" verticalAlignment="top" />
-		<AbsoluteLayout id="selection-container" row="2" horizontalAlignment="stretch" verticalAlignment="stretch">
+		<Image id="billImageView" row="3" stretch="aspectFit" horizontalAlignment="left" verticalAlignment="top" />
+		<AbsoluteLayout id="selection-container" row="3" horizontalAlignment="stretch" verticalAlignment="stretch">
 			<GridLayout id="selection" horizontalAlignment="left" verticalAlignment="top" style.borderColor="gray" />
 		</AbsoluteLayout>
 		
 		<!-- <Image id="cropped-image" row="1" margin="5" stretch="aspectFit" horizontalAlignment="left" verticalAlignment="top" />-->
-		<Border row="3" height="1" verticalAlignment="top" backgroundColor="gray" />
-		<Button text="scan" row="3" horizontalAlignment="center" verticalAlignment="bottom" tap="addImageButtonTap" />
+		<Border row="4" height="1" verticalAlignment="top" backgroundColor="#AAA" />
+		<Button text="scan" row="4" horizontalAlignment="center" verticalAlignment="bottom" tap="addImageButtonTap" />
 	</GridLayout>
 </Page>

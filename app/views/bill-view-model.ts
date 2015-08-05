@@ -7,7 +7,13 @@ declare var G8Tesseract: any;
 declare var G8OCREngineMode: any;
 declare var G8PageSegmentationMode: any;
 
-export class Bill extends observable.Observable {
+export class ObservableBase extends observable.Observable {
+    protected notifyPropertyChanged(propertyName: string, value: any) {
+        this.notify({ object: this, eventName: observable.Observable.propertyChangeEvent, propertyName: propertyName, value: value });
+    }
+}
+
+export class Bill extends ObservableBase {
 
     products: observableArray.ObservableArray<Product>;
 
@@ -40,25 +46,28 @@ export class Bill extends observable.Observable {
     updateTotal() {
         var total = 0;
         for (var i = 0; i < this.products.length; i++) {
-            total += this.products.getItem(i).price;
+            var product = this.products.getItem(i);
+            if (!product.isNaN) {
+                total += this.products.getItem(i).price;
+            }
         }
-        this._total = Math.ceil(total * 100) / 100;
+        this._total = Math.round(total * 100) / 100;
         this.notifyPropertyChanged("total", this._total);
     }
 
-    notifyPropertyChanged(propertyName: string, value: any) {
-        this.notify({ object: this, eventName: observable.Observable.propertyChangeEvent, propertyName: propertyName, value: value });
-    }
+
 }
 
-export class Product extends observable.Observable {
-    image: any;
-    price: number;
+export class Product extends ObservableBase {
+
+    private _image: any;
+    private _text: string;
+    private _price: number;
 
     constructor(private bill: Bill, image: imageSource.ImageSource) {
         super();
 
-        this.image = image;
+        this._image = image;
 
         if (image.android) {
             // Parse in android
@@ -73,12 +82,34 @@ export class Product extends observable.Observable {
 
             console.log("Recognized: " + tesseract.recognizedText);
 
-            // Apply image parsing...
-            this.price = parseFloat(tesseract.recognizedText);
+            this.text = tesseract.recognizedText.trim();
+
         } else {
             this.price = 0;
         }
     }
+
+    get image() { return this._image; }
+
+    get text(): string { return this._text; }
+    set text(value: string) {
+        this._text = value;
+        this.notifyPropertyChanged("text", value);
+        this.price = parseFloat(this._text);
+    }
+
+    get price(): any { return this._price }
+    set price(value: any) {
+        if (typeof value === "string") {
+            value = <any>parseFloat(value);
+        }
+        this._price = value;
+        this.notifyPropertyChanged("price", value);
+        this.notifyPropertyChanged("isNaN", isNaN(this.price));
+        this.bill.updateTotal();
+    }
+
+    get isNaN() { return isNaN(this.price); }
 
     remove() {
         this.bill.removeProduct(this);
