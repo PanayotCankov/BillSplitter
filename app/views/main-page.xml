@@ -29,7 +29,9 @@
 		
 		<Image id="billImageView" row="3" stretch="aspectFit" horizontalAlignment="left" verticalAlignment="top" />
 		<AbsoluteLayout id="selection-container" row="3" horizontalAlignment="stretch" verticalAlignment="stretch">
-			<GridLayout id="selection" horizontalAlignment="left" verticalAlignment="top" style.borderColor="gray" />
+			<GridLayout id="selection-start" horizontalAlignment="left" verticalAlignment="top" width="3" height="3"
+				visibility="collapse" backgroundColor="red" />
+			<GridLayout id="selection" horizontalAlignment="left" verticalAlignment="top" style.borderColor="red" />
 		</AbsoluteLayout>
 		
 		<Border row="4" height="1" verticalAlignment="top" backgroundColor="#AAA" />

@@ -8,6 +8,7 @@ var page;
 var billImageView;
 var selectionContainer;
 var selection;
+var selectionStart;
 var density;
 var imageScale = 1;
 var bill = new billvm.Bill();
@@ -17,6 +18,7 @@ function pageLoaded(args) {
     billImageView = page.getViewById("billImageView");
     selectionContainer = page.getViewById("selection-container");
     selection = page.getViewById("selection");
+    selectionStart = page.getViewById("selection-start");
     if (selectionContainer.android) {
         selectionContainer.android.setOnTouchListener(new android.view.View.OnTouchListener({
             onTouch: containerTouch
@@ -91,6 +93,7 @@ function containerPan(args) {
         }
     }
 }
+var topOffset = 40;
 var selX;
 var selY;
 var selW;
@@ -100,6 +103,9 @@ function panStarted(x, y) {
     selY = y;
     selW = 0;
     selH = 0;
+    selectionStart.visibility = "visible";
+    absolute.AbsoluteLayout.setLeft(selectionStart, selX - 1);
+    absolute.AbsoluteLayout.setTop(selectionStart, selY - topOffset - 1);
     selection.borderWidth = 1;
     updateSelection();
 }
@@ -110,11 +116,13 @@ function panMoving(x, y) {
 }
 function panEnded() {
     selection.borderWidth = 0;
+    selectionStart.visibility = "collapse";
     cropImage();
 }
 function updateSelection() {
     var left = selX - (selW > 0 ? 0 : -selW);
     var top = selY - (selH > 0 ? 0 : -selH);
+    top -= topOffset;
     absolute.AbsoluteLayout.setTop(selection, top);
     absolute.AbsoluteLayout.setLeft(selection, left);
     selection.width = Math.abs(selW);
@@ -125,14 +133,21 @@ function cropImage() {
     if (!imgSrc) {
         return;
     }
-    var left = (selX - (selW > 0 ? 0 : -selW)) * density / imageScale;
-    var top = (selY - (selH > 0 ? 0 : -selH)) * density / imageScale;
-    var width = (Math.abs(selW)) * density / imageScale;
-    var height = (Math.abs(selH)) * density / imageScale;
+    var left = (selX - (selW > 0 ? 0 : -selW));
+    var top = (selY - (selH > 0 ? 0 : -selH)) - topOffset;
+    var width = (Math.abs(selW));
+    var height = (Math.abs(selH));
+    left *= density / imageScale;
+    top *= density / imageScale;
+    width *= density / imageScale;
+    height *= density / imageScale;
     left = Math.max(0, left);
     top = Math.max(0, top);
-    width = Math.min(imgSrc.width - left, width);
-    height = Math.min(imgSrc.height - top, height);
+    width = Math.max(0, Math.min(imgSrc.width - left, width));
+    height = Math.max(0, Math.min(imgSrc.height - top, height));
+    if (width < 5 || height < 5) {
+        return;
+    }
     var croppedImageSource;
     if (billImageView.ios) {
         var rect = CGRectMake(left, top, width, height);
