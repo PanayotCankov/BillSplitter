@@ -1,5 +1,7 @@
-# nativescript-marketplace-demo
-Repository used for the NativeScript demo app
+# NativeScript BillSplitter
+The app uses the camera module to let you capture a photo of a bill. You can then mark some of the amounts in the bill and they get added in a list. OCR is used to convert the images into prices. The app also calculates the total amount of the selection.
+
+![BillSplitter](BillSplitter.png)
 
 # To start
 ```
