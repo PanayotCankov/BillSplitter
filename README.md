@@ -37,5 +37,5 @@ node_modules/typescript/bin/tsc -p ./app && tns run ios --emulator --device iPho
 
 # To run
 ```
-npm run ios
+tns run ios
 ```
